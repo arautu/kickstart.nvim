@@ -451,7 +451,23 @@ require('lazy').setup({
     end,
   },
 
-  { 'mfussenegger/nvim-jdtls' },
+  {
+    'mfussenegger/nvim-jdtls',
+    dependencies = {
+      'mfussenegger/nvim-dap',
+    },
+  },
+
+  -- mason nvim dap utilizes mason to automatically ensure debug adapters you want installed are installed, mason-lspconfig will not automatically install debug adapters for us
+  {
+    'jay-babu/mason-nvim-dap.nvim',
+    config = function()
+      -- ensure the java debug adapter is installed
+      require('mason-nvim-dap').setup {
+        ensure_installed = { 'javadbg', 'java-test' },
+      }
+    end,
+  },
 
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
@@ -659,6 +675,7 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'google-java-format',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -714,8 +731,10 @@ require('lazy').setup({
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
+        -- You can use 'stop_after_first' to run the first available formatter from thelua require"cmp.utils.feedkeys".run(4)
+        -- "list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        java = { 'google-java-format' },
       },
     },
   },
@@ -967,6 +986,8 @@ require('lazy').setup({
     },
   },
 })
+
+require 'custom.autocmds'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
