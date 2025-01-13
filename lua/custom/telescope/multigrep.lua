@@ -2,6 +2,7 @@ local pickers = require 'telescope.pickers'
 local finders = require 'telescope.finders'
 local make_entry = require 'telescope.make_entry'
 local conf = require('telescope.config').values
+local themes = require 'telescope.themes'
 
 local M = {}
 
@@ -37,8 +38,10 @@ local live_multigrep = function(opts)
     cwd = opts.cwd,
   }
 
+  local theme_opts = themes.get_ivy()
+
   pickers
-    .new(opts, {
+    .new(vim.tbl_extend('force', theme_opts, opts), {
       debounce = 100,
       prompt_title = 'Multi Grep',
       finder = finder,
